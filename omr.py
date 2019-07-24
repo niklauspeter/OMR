@@ -23,7 +23,7 @@ def get_approx_contour(contour, tol=.01):
     return cv2.approxPolyDP(contour, epsilon, True)
 
 def get_contours(image_gray):
-    im2, contours, hierarchy = cv2.findContours(
+    im2, contours, heirarachy = cv2.findContours(
         image_gray, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     return map(get_approx_contour, contours)
@@ -209,6 +209,9 @@ def get_answers(source_file):
     #cv2.imshow('bw', im)
 
     return answers, transf
+    
+
+# construct the argument parser and parse the arguments
 
 def main():
     parser = argparse.ArgumentParser()
