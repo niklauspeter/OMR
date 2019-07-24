@@ -55,17 +55,35 @@ warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
 # warped = (warped > T).astype("uint8") * 255
 
 warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
-thresh = threshold_local(warped, 11, offset = 10, method = "gaussian")
+# thresh = threshold_local(warped, 11, offset = 10, method = "gaussian")
+thresh = cv2.threshold(warped, 0, 255,
+	cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
 # warped = (warped > T).astype("uint8") * 255
  
+cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+	cv2.CHAIN_APPROX_SIMPLE)
+cnts = imutils.grab_contours(cnts)
+questionCnts = []
+
+for c in cnts:
+	# compute the bounding box of the contour, then use the
+	# bounding box to derive the aspect ratio
+	(x, y, w, h) = cv2.boundingRect(c)
+	ar = w / float(h)
+ 
+	# in order to label the contour as a question, region
+	# should be sufficiently wide, sufficiently tall, and
+	# have an aspect ratio approximately equal to 1
+	if w >= 20 and h >= 20 and ar >= 0.9 and ar <= 1.1:
+		questionCnts.append(c)
 
 # show the original and scanned images
 print("STEP 3: Apply perspective transform")
 cv2.imshow("Original", imutils.resize(orig, height = 650))
 cv2.imshow("Scanned", imutils.resize(warped, height = 650))
-# cv2.imshow("Thresh", imutils.resize(thresh, height = 650))
+cv2.imshow("Thresh", imutils.resize(thresh, height = 650))
 cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
-cv2.drawContours(image, [warped], -1, (0, 255, 0), 2)
+# cv2.drawContours(image, [warped], -1, (0, 255, 0), 2)
 cv2.imshow("Outline", image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
