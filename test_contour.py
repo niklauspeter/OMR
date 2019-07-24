@@ -49,15 +49,23 @@ warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
  
 # convert the warped image to grayscale, then threshold it
 # to give it that 'black and white' paper effect
+
+# warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
+# T = threshold_local(warped, 11, offset = 10, method = "gaussian")
+# warped = (warped > T).astype("uint8") * 255
+
 warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
-T = threshold_local(warped, 11, offset = 10, method = "gaussian")
-warped = (warped > T).astype("uint8") * 255
+thresh = threshold_local(warped, 11, offset = 10, method = "gaussian")
+# warped = (warped > T).astype("uint8") * 255
  
+
 # show the original and scanned images
 print("STEP 3: Apply perspective transform")
 cv2.imshow("Original", imutils.resize(orig, height = 650))
 cv2.imshow("Scanned", imutils.resize(warped, height = 650))
+# cv2.imshow("Thresh", imutils.resize(thresh, height = 650))
 cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
+cv2.drawContours(image, [warped], -1, (0, 255, 0), 2)
 cv2.imshow("Outline", image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
