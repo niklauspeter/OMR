@@ -33,10 +33,10 @@ def get_corners(contours):
         contours,
         key=lambda c: features_distance(CORNER_FEATS, get_features(c)))[:4]
 
-# def get_bounding_rect(contour):
-#     rect = cv2.minAreaRect(contour)
-#     box = cv2.boxPoints(rect)
-#     return np.int0(box)
+def get_bounding_rect(contour):
+    rect = cv2.minAreaRect(contour)
+    box = cv2.boxPoints(rect)
+    return np.int0(box)
 
 def get_convex_hull(contour):
     return cv2.convexHull(contour)
