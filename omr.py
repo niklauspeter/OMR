@@ -2,6 +2,7 @@ import argparse
 import cv2
 import math
 import numpy as np
+# import test_contour as test
 
 
 CORNER_FEATS = (
