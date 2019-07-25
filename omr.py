@@ -170,7 +170,6 @@ def get_answers(source_file):
 
         - Load image
         - Convert to grayscale
-        - Filter out high frequencies with a Gaussian kernel
         - Apply threshold
         - Find contours
         - Find corners among all contours
