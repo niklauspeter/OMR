@@ -6,7 +6,11 @@ import argparse
 import cv2
 import imutils
 from imutils import contours
-
+from skimage.color import rgb2gray
+import cv2
+import matplotlib.pyplot as plt
+# %matplotlib inline
+from scipy import ndimage
  
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -53,24 +57,7 @@ for c in cnts:
 # view of the original image
 paper = four_point_transform(image, screenCnt.reshape(4, 2))
 warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
-
-
-warped =imutils.resize(warped, height=650)
-warped = cv2.cvtColor(warped,cv2.COLOR_BGR2GRAY)
-warped = cv2.GaussianBlur(warped, (5, 5), 0)
-
-circles = cv2.HoughCircles(warped,cv2.HOUGH_GRADIENT,1,120,
-                            param1=50,param2=30,minRadius=10,maxRadius=20)
-
-circles = np.uint16(np.around(circles))
-for i in circles[0,:]:
-    # draw the outer circle
-    cv2.circle(warped,(i[0],i[1]),i[2],(0,255,0),2)
-    # draw the center of the circle
-    cv2.circle(warped,(i[0],i[1]),2,(0,0,255),3)
-
-cv2.imshow('detected circles',warped)
-
+ 
 # convert the warped image to grayscale, then threshold it
 # to give it that 'black and white' paper effect
 
@@ -78,61 +65,26 @@ cv2.imshow('detected circles',warped)
 # T = threshold_local(warped, 11, offset = 10, method = "gaussian")
 # warped = (warped > T).astype("uint8") * 255
 
-# image_color= cv2.imread("img/answered-sheet-photo.jpg")
-
-# image_ori = cv2.cvtColor(image_color,cv2.COLOR_BGR2GRAY)
-
-#new code ...........
-# warped =(imutils.resize(warped, height=650))
-# image_ori = cv2.cvtColor(warped,cv2.COLOR_BGR2GRAY)
-
-# lower_bound = np.array([0,0,10])
-# upper_bound = np.array([255,255,195])
-
-
-# img= warped
-# mask = cv2.inRange(warped, lower_bound, upper_bound)
-
-# mask = cv2.adaptiveThreshold(image_ori,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
-#             cv2.THRESH_BINARY_INV,33,2)
-
-# kernel = np.ones((3, 3), np.uint8)
-
-# #Use erosion and dilation combination to eliminate false positives. 
-# #In this case the text Q0X could be identified as circles but it is not.
-# mask = cv2.erode(mask, kernel, iterations=6)
-# mask = cv2.dilate(mask, kernel, iterations=3)
-
-# closing = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-
-# contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
-#         cv2.CHAIN_APPROX_SIMPLE)[0]
-# contours.sort(key=lambda x:cv2.boundingRect(x)[0])
-
-# array = []
-# ii = 1
-# print(len(contours))
-# for c in contours:
-#     (x,y),r = cv2.minEnclosingCircle(c)
-#     center = (int(x),int(y))
-#     r = int(r)
-#     if r >= 6 and r<=10:
-#         cv2.circle(img,center,r,(0,255,0),2)
-#         array.append(center)
-
-# # cv2.imshow("preprocessed", warped)
- #new code ends ..............
-
-
-
-
-# warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
-# warped = cv2.GaussianBlur(warped, (5, 5), 0)
-# # thresh = threshold_local(warped, 11, offset = 10, method = "gaussian")
-# thresh = cv2.threshold(warped, 0, 255,
-# 	cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-# # warped = (warped > T).astype("uint8") * 255
+warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
+warped = cv2.GaussianBlur(warped, (5, 5), 0)
+# thresh = threshold_local(warped, 11, offset = 10, method = "gaussian")
+thresh = cv2.threshold(warped, 0, 255,
+	cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+# warped = (warped > T).astype("uint8") * 255
  
+warped = imutils.resize(warped, width=300, height = 650)
+thresh = imutils.resize(thresh, width=300, height = 650)
+
+i= thresh[197:373,181:300]
+
+cv2.imshow("Outline", warped)
+
+pic = plt.imread('img/answered-sheet-photo.jpg')/255  # dividing by 255 to bring the pixel values between 0 and 1
+print(pic.shape)
+plt.imshow(pic)
+# image = plt.imread('index.png')
+# plt.imshow(image)
+
 # cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
 # 	cv2.CHAIN_APPROX_SIMPLE)
 # cnts = imutils.grab_contours(cnts)
@@ -209,16 +161,15 @@ cv2.imshow('detected circles',warped)
 # cv2.imshow("Exam", paper)
 
 # show the original and scanned images
-print("STEP 3: Apply perspective transform")
-# cv2.imshow("preprocessed", warped)
-cv2.imshow("Original", imutils.resize(orig, height = 650))
+# print("STEP 3: Apply perspective transform")
+# cv2.imshow("Original", imutils.resize(orig, height = 650))
 # cv2.imshow("Scanned", imutils.resize(warped, height = 650))
 # cv2.imshow("Thresh", imutils.resize(thresh, height = 650))
 
-cv2.imshow("preprocessed", warped)
-cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
+# cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
 
-cv2.imshow("Outline", image)
+# cv2.imshow("Outline", image)
+
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
