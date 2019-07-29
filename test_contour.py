@@ -55,21 +55,40 @@ paper = four_point_transform(image, screenCnt.reshape(4, 2))
 warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
 
 
-warped =imutils.resize(warped, height=650)
+warped =imutils.resize(warped,width=650, height=650)
+
+#identify circles ..........
 warped = cv2.cvtColor(warped,cv2.COLOR_BGR2GRAY)
 warped = cv2.GaussianBlur(warped, (5, 5), 0)
+# warped = threshold_local(warped, 11, offset = 10, method = "gaussian")
+# warped = cv2.threshold(warped, 0, 255,
+ 	# cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[0]
 
-circles = cv2.HoughCircles(warped,cv2.HOUGH_GRADIENT,1,120,
+circles = cv2.HoughCircles(warped,cv2.HOUGH_GRADIENT,1,20,
                             param1=50,param2=30,minRadius=10,maxRadius=20)
 
 circles = np.uint16(np.around(circles))
+
+
+print (circles)
+font = cv2.FONT_HERSHEY_SIMPLEX
+height, width = warped.shape[:2] 
 for i in circles[0,:]:
     # draw the outer circle
     cv2.circle(warped,(i[0],i[1]),i[2],(0,255,0),2)
     # draw the center of the circle
     cv2.circle(warped,(i[0],i[1]),2,(0,0,255),3)
+    cv2.putText(warped,'Center[x y radius]: ' + str(i),(i[0]+10,i[1]+i[2]+10), font, 0.5, (200,255,155), 1, cv2.LINE_AA)
 
+# for i in circles[0,:]:
+#     # draw the outer circle
+#     cv2.circle(warped,(i[0],i[1]),i[2],(0,255,0),2)
+#     # draw the center of the circle
+#     cv2.circle(warped,(i[0],i[1]),2,(0,0,255),3)
 cv2.imshow('detected circles',warped)
+
+#end identify circles ..........
+
 
 # convert the warped image to grayscale, then threshold it
 # to give it that 'black and white' paper effect
