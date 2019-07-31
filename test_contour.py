@@ -55,7 +55,7 @@ paper = four_point_transform(image, screenCnt.reshape(4, 2))
 warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
 
 
-warped =imutils.resize(warped,width=650, height=650)
+warped =imutils.resize(warped , height=650)
 
 #identify circles ..........
 warped = cv2.cvtColor(warped,cv2.COLOR_BGR2GRAY)
@@ -78,7 +78,7 @@ for i in circles[0,:]:
     cv2.circle(warped,(i[0],i[1]),i[2],(0,255,0),2)
     # draw the center of the circle
     cv2.circle(warped,(i[0],i[1]),2,(0,0,255),3)
-    cv2.putText(warped,'Center[x y radius]: ' + str(i),(i[0]+10,i[1]+i[2]+10), font, 0.5, (200,255,155), 1, cv2.LINE_AA)
+    cv2.putText(warped,'btn' + str(i),(i[0]+10,i[1]+i[2]+10), font, 0.5, (200,255,155), 1, cv2.LINE_AA)
 
 # for i in circles[0,:]:
 #     # draw the outer circle
