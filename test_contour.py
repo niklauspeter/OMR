@@ -14,9 +14,7 @@ ap.add_argument("-i", "--image", required = True,
 	help = "Path to the image to be scanned")
 args = vars(ap.parse_args())
 
-# define the answer key which maps the question number
-# to the correct answer
-ANSWER_KEY = {0: 1, 1: 4, 2: 0, 3: 3, 4: 1}
+
 
 # load the image and compute the ratio of the old height
 # to the new height, clone it, and resize it
@@ -36,7 +34,7 @@ edged = cv2.Canny(gray, 75, 200)
 cnts = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 cnts = imutils.grab_contours(cnts)
 cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:5]
- 
+
 # loop over the contours
 for c in cnts:
 	# approximate the contour
@@ -68,7 +66,11 @@ circles = cv2.HoughCircles(warped,cv2.HOUGH_GRADIENT,1,20,
                             param1=50,param2=30,minRadius=10,maxRadius=20)
 
 circles = np.uint16(np.around(circles))
+thresh = cv2.threshold(warped, 0, 255,
+		cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
 
+# mask = cv2.bitwise_and(thresh, thresh)
+# total = cv2.countNonZero(mask)
 
 print (circles)
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -85,7 +87,23 @@ for i in circles[0,:]:
 #     cv2.circle(warped,(i[0],i[1]),i[2],(0,255,0),2)
 #     # draw the center of the circle
 #     cv2.circle(warped,(i[0],i[1]),2,(0,0,255),3)
+
 cv2.imshow('detected circles',warped)
+
+# try to do the same for only the shaded regions
+
+# for i in circles[0,:]:
+# 	mask = np.zeros(thresh.shape, dtype="uint8")
+# 	mask = cv2.bitwise_and(thresh, thresh, mask=mask)
+# 	total = cv2.countNonZero(mask)
+# 	if total>None:
+# 		cv2.circle(warped, (i[0], i[1],i[2], (0,255,0)),2)
+# 		cv2.circle(warped, (i[0],i[1],2,(0,0,255),3)
+	
+		
+# cv2.imshow('detected circles',warped))
+
+
 
 #end identify circles ..........
 
@@ -232,7 +250,7 @@ print("STEP 3: Apply perspective transform")
 # cv2.imshow("preprocessed", warped)
 cv2.imshow("Original", imutils.resize(orig, height = 650))
 # cv2.imshow("Scanned", imutils.resize(warped, height = 650))
-# cv2.imshow("Thresh", imutils.resize(thresh, height = 650))
+cv2.imshow("Thresh", imutils.resize(thresh, height = 650))
 
 cv2.imshow("preprocessed", warped)
 cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)

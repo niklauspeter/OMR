@@ -153,14 +153,15 @@ def scanner(image):
 
 	return cv2.imshow("Scanned", imutils.resize(warped, height = 650))
 
-CORNER_FEATS = (
-    0.322965313273202,
-    0.19188334690998524,
-    1.1514327482234812,
-    0.998754685666376,
-)
+# CORNER_FEATS = (
+#     0.322965313273202,
+#     0.19188334690998524,
+#     1.1514327482234812,
+#     0.998754685666376,
+# )
 
-TRANSF_SIZE = 512
+TRANSF_SIZE = 1000
+
 
 
 def normalize(im):
@@ -287,7 +288,7 @@ def get_question_patch(transf, q_number):
     return transf[tl[1]:br[1], tl[0]:br[0]]
 
 def get_question_patches(transf):
-    for i in range(1, 11):
+    for i in range(1, 30):
         yield get_question_patch(transf, i)
 
 def get_alternative_patches(question_patch):
