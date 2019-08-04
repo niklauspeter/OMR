@@ -120,8 +120,27 @@ im_with_keypoints = cv2.drawKeypoints(warped, keypoints, np.array([]), (0,0,255)
 pts= cv2.KeyPoint_convert(keypoints)
 # pts = pts.reshape(-1, 1, 2)
 # print(pts)
-# print(keypoints[0].pt)
+# print(keypoints[0].pt)making a two dimensional lis to a one dimensional list python
 
-print(pts)
+dict = { '23.51547' : 'key','388.3149' : 'add'
+
+}
+for k,v in dict.items():
+	for i in range(len(pts)):
+		for j in range(len(pts[0])):
+			if int(float(pts[i][j])) == int(float(k)):
+			# if j == k:
+				print("systems go")
+			else :
+				print(pts[i][j])
+
+# for k,v in dict.items():
+# 	for i in len(myList):
+#           for j in len(myList[0]):
+#             myList[i][j] = 0
+# 			if j == k:
+
+
+print(len(pts))
 cv2.imshow("Keypoints", im_with_keypoints)
 cv2.waitKey(0)
