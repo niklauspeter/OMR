@@ -122,25 +122,35 @@ pts= cv2.KeyPoint_convert(keypoints)
 # print(pts)
 # print(keypoints[0].pt)making a two dimensional lis to a one dimensional list python
 
-dict = { '23.51547' : 'key','388.3149' : 'add'
+dict = { '23.51547' : 'male','388.3149' : 'first visit'
 
 }
+# for k,v in dict.items():
+# 	for i in range(len(pts)):
+# 		for j in range(len(pts[0])):
+# 			# ind=0 instead find the index of the key at point where its equal then 
+# 			# use this index to find the key value, using formular value_at_index = dic.values()[index]
+# 			if int(float(pts[i][j])) == int(float(k)):
+# 			# if j == k:
+# 				print("systems go")
+# 			else :
+# 				print(pts[i][j])
+
 for k,v in dict.items():
 	for i in range(len(pts)):
 		for j in range(len(pts[0])):
-			if int(float(pts[i][j])) == int(float(k)):
-			# if j == k:
-				print("systems go")
+			ind=0
+			if int(float(pts[i][j]))==int(float(k)):
+				st = str(pts[i][j])
+				print(dict.get(st))
+				ind += 1
 			else :
-				print(pts[i][j])
+				ind+=1
 
-# for k,v in dict.items():
-# 	for i in len(myList):
-#           for j in len(myList[0]):
-#             myList[i][j] = 0
-# 			if j == k:
+			
+			
 
 
-print(len(pts))
-cv2.imshow("Keypoints", im_with_keypoints)
+print(st)
+# cv2.imshow("Keypoints", im_with_keypoints)
 cv2.waitKey(0)
