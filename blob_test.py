@@ -5,7 +5,7 @@ import argparse
 import cv2
 import imutils
 from imutils import contours
-
+import math 
 # construct the argument parser and parse the arguments
 # ap = argparse.ArgumentParser()
 # ap.add_argument("-i", "--image", required = True,
@@ -16,7 +16,7 @@ from imutils import contours
 
 # load the image and compute the ratio of the old height
 # to the new height, clone it, and resize it
-image = cv2.imread("img/answered-sheet-photo.jpg")
+image = cv2.imread("img/green.jpg")
 ratio = image.shape[0] / 500.0
 orig = image.copy()
 image = imutils.resize(image, height = 500)
@@ -122,7 +122,7 @@ pts= cv2.KeyPoint_convert(keypoints)
 # print(pts)
 # print(keypoints[0].pt)making a two dimensional lis to a one dimensional list python
 
-dict = { '23.51547' : 'male','388.3149' : 'first visit'
+dict = { '62' : 'male','108':'female','290' : 'first visit'
 
 }
 # for k,v in dict.items():
@@ -134,23 +134,55 @@ dict = { '23.51547' : 'male','388.3149' : 'first visit'
 # 			# if j == k:
 # 				print("systems go")
 # 			else :
-# 				print(pts[i][j])
+# 				print(pts[i][j])++
 
+test=[]
+
+# for k,v in dict.items():
+# 	for i in range(len(pts)):
+# 		for j in range(len(pts[0])):
+# 			ind=0
+# 			if int(float(pts[i][j]))==int(float(k)):
+# 				st = str(pts[i][j])
+# 				test.append(dict.get(st))
+# 				# print(dict.get(st))
+# 				ind += 1
+# 			else :
+# 				ind+=1
+
+ar = []
+ar2 =[]
 for k,v in dict.items():
 	for i in range(len(pts)):
 		for j in range(len(pts[0])):
 			ind=0
-			if int(float(pts[i][j]))==int(float(k)):
-				st = str(pts[i][j])
-				print(dict.get(st))
+			# print(pts[i][j])
+			x = int(float(pts[i][j]))
+			z = int(float(k))
+			t = math.floor(x)
+			
+			u = math.floor(z)
+			ar.append(t)
+			ar2.append(u)
+			variation=t-1
+
+			# print("key")
+			# print(u)
+			if t==u:
+				st = str(t)
+			
+				test.append(dict.get(st))
+				# print(dict.get(st))
 				ind += 1
-			else :
-				ind+=1
-
-			
-			
-
-
-print(st)
+			if variation==u:
+				
+				s =str(variation)
+				test.append(dict.get(s))
+		
+# print(ar)
+# print(ar2)	
+print(test)
+print(variation)
+print(t)
 # cv2.imshow("Keypoints", im_with_keypoints)
 cv2.waitKey(0)
