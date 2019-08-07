@@ -16,7 +16,7 @@ import math
 
 # load the image and compute the ratio of the old height
 # to the new height, clone it, and resize it
-image = cv2.imread("img/green.jpg")
+image = cv2.imread("img/marked.jpg")
 ratio = image.shape[0] / 500.0
 orig = image.copy()
 image = imutils.resize(image, height = 500)
@@ -26,7 +26,6 @@ image = imutils.resize(image, height = 500)
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 gray = cv2.GaussianBlur(gray, (5, 5), 0)
 edged = cv2.Canny(gray, 75, 200)
- 
 # find the contours in the edged image, keeping only the
 # largest ones, and initialize the screen contour
 cnts = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
@@ -122,9 +121,10 @@ pts= cv2.KeyPoint_convert(keypoints)
 # print(pts)
 # print(keypoints[0].pt)making a two dimensional lis to a one dimensional list python
 
-dict = { '62' : 'male','108':'female','290' : 'first visit'
+dict = { '62' : 'GENDER: male','108':'GENDER: female','290' : 'STATUS: follow up','271':'AGE : >12','46':'AGE: 6-12','349':'HIV STATUS: +ve','144':'CONDITION: stroke','365':'PAIN SEVERITY: 3-4 ','152':'PAIN SEVERITY: 5-6 '
 
 }
+
 # for k,v in dict.items():
 # 	for i in range(len(pts)):
 # 		for j in range(len(pts[0])):
@@ -164,7 +164,10 @@ for k,v in dict.items():
 			u = math.floor(z)
 			ar.append(t)
 			ar2.append(u)
-			variation=t-1
+			variation=t-2
+			plusvar=t+2
+			var=t-1
+			plus=t+1
 
 			# print("key")
 			# print(u)
@@ -178,11 +181,24 @@ for k,v in dict.items():
 				
 				s =str(variation)
 				test.append(dict.get(s))
-		
+			if plusvar==u:
+				
+				s =str(plusvar)
+				test.append(dict.get(s))
+			if plus==u:
+				
+				s =str(plus)
+				test.append(dict.get(s))
+			if var==u:
+				
+				s =str(var)
+				test.append(dict.get(s))
+# model.objects.create(gender=m)		
 # print(ar)
 # print(ar2)	
 print(test)
-print(variation)
-print(t)
-# cv2.imshow("Keypoints", im_with_keypoints)
+# print(variation)
+# print(t)
+print(pts)
+cv2.imshow("Keypoints", im_with_keypoints)
 cv2.waitKey(0)
